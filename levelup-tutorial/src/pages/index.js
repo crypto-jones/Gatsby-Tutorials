@@ -13,17 +13,25 @@ const IndexPage = ({ data }) => (
     <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }} />
     <Link to="/page-2/">Go to page 2</Link>
     <h2>Index</h2>
-    {data.allMarkdownRemark.edges.map(post => (
-      <Link key={post.node.id} to={post.node.frontmatter.path}>
-        {post.node.frontmatter.title}
-      </Link>
-    ))}
+    <ul>
+      {data.allMarkdownRemark.edges.map(post => (
+        <li key={post.node.id}>
+          <Link to={post.node.frontmatter.path}>
+            {post.node.frontmatter.title}
+          </Link>
+        </li>
+      ))}
+    </ul>
   </Layout>
 );
 
 export const pageQuery = graphql`
   query IndexQuery {
-    allMarkdownRemark(limit: 10) {
+    allMarkdownRemark(
+      limit: 10
+      sort: { fields: [frontmatter___date], order: DESC }
+      filter: { frontmatter: { published: { eq: true } } }
+    ) {
       edges {
         node {
           id
